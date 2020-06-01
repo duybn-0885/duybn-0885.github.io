@@ -1,0 +1,487 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API Docs for Python project training",
+    "version": "1.0.0",
+    "title": "Project Training"
+  },
+  "host": "52.188.64.38:8000",
+  "basePath": "/api/v1",
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Register new user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "data",
+            "schema": {
+              "type": "object",
+              "required": [
+                "email",
+                "password",
+                "first_name",
+                "last_name"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "first_name": {
+                  "type": "string"
+                },
+                "last_name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Register successful"
+          },
+          "400": {
+            "description": "Email exist"
+          },
+          "500": {
+            "description": "Register unsuccessful."
+          }
+        }
+      }
+    },
+    "/token": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get access and refresh token",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "data",
+            "schema": {
+              "type": "object",
+              "required": [
+                "email",
+                "password"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get token success"
+          }
+        }
+      }
+    },
+    "/token/refresh": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get access token from refresh token",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "data",
+            "schema": {
+              "type": "object",
+              "required": [
+                "refresh"
+              ],
+              "properties": {
+                "refresh": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get token success"
+          }
+        }
+      }
+    },
+    "/posts/{post_id}/comments": {
+      "get": {
+        "tags": [
+          "comment"
+        ],
+        "summary": "Get comments of specific post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "type": "integer",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "type": "integer",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get comment success"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "comment"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Create comments of specific post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "schema": {
+              "type": "object",
+              "required": [
+                "content"
+              ],
+              "properties": {
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get comment success"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      }
+    },
+    "/comments/{comment_id}": {
+      "put": {
+        "tags": [
+          "comment"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Edit specific comment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "comment_id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "schema": {
+              "type": "object",
+              "required": [
+                "content"
+              ],
+              "properties": {
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Edit comment success"
+          },
+          "400": {
+            "description": "Edit comment failure"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Comment not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "comment"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Delete specific comment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "comment_id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete comment success"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Comment not found"
+          }
+        }
+      }
+    },
+    "/posts": {
+      "get": {
+        "tags": [
+          "post"
+        ],
+        "summary": "Get posts",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "type": "integer",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "type": "integer",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get posts success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "post"
+        ],
+        "summary": "Create post",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "data",
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "content"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Create post success"
+          }
+        }
+      }
+    },
+    "/posts/{post_id}": {
+      "put": {
+        "tags": [
+          "post"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Edit post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "content"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Edit post success"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "post"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Delete post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete post success"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      }
+    },
+    "/mail": {
+      "post": {
+        "tags": [
+          "mail"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Send mail",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "mail_file",
+            "type": "file",
+            "description": "Email to send mail"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Send mail success"
+          },
+          "403": {
+            "description": "Permission denied"
+          }
+        }
+      }
+    }
+  }
+}
